@@ -80,3 +80,29 @@ def delete_blog(id, db: Session = Depends(get_db)):
 
     return "Blog deleted successfully!"
 
+
+# adding users
+@app.post('/user', response_model=schema.UserDetails)
+def create_user(request: schema.User, db: Session = Depends(get_db)):
+    new_user = User(
+        name=request.name, 
+        email=request.email,
+        password=request.password,
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
+
+
+# display user info
+@app.get('/user/{id}', response_model=schema.UserDetails)
+def get_user(id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(User.id == id).first()
+
+    if not user:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, 'User not found!')
+    
+    return user
