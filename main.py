@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends, status, Response, HTTPException
 from db.database import engine, SessionLocal
 from sqlalchemy.orm import Session
-from db.models import Blog
+from db.models import Blog, User
+from hashing.hasher import PasswordHash
 from typing import List
 from db import schema
 from db import models
